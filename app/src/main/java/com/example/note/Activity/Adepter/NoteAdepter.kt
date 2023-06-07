@@ -41,16 +41,20 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
     override fun onBindViewHolder(holder: Noteholder, position: Int) {
         db = NoteDatabase.getinstance(context)
 
+
+
         holder.apply {
             txttitle.text = list.get(position).title
             txtnote.text = list.get(position).text
             cardnote.setCardBackgroundColor(list.get(position).color)
 
             if (list.get(position).pin) {
-                pinned.setImageResource(R.drawable.pinned)
-            } else {
                 pinned.setImageResource(R.drawable.unpinned)
+
+            } else {
+                pinned.setImageResource(R.drawable.pinned)
             }
+
 
             pinned.setOnClickListener {
                 if (list.get(position).pin) {
@@ -73,8 +77,10 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
                     )
                     data.id = list.get(position).id
                     db.notes().updatedata(data)
+
                 }
                 MainActivity.update()
+
             }
         }
 
@@ -83,5 +89,6 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
 
     override fun getItemCount(): Int {
         return list.size
+        notifyDataSetChanged()
     }
 }
