@@ -54,8 +54,6 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
             } else {
                 pinned.setImageResource(R.drawable.pinned)
             }
-
-
             pinned.setOnClickListener {
                 if (list.get(position).pin) {
                     var data = Notes(
