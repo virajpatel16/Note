@@ -1,11 +1,15 @@
 package com.example.note.Activity.Adepter
 
+import android.app.Dialog
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -13,6 +17,8 @@ import com.example.note.Activity.Database.NoteDatabase
 import com.example.note.Activity.MainActivity
 import com.example.note.Activity.model.Notes
 import com.example.note.R
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
 
@@ -26,6 +32,8 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
         var txtnote = itemView.findViewById<TextView>(R.id.txtNote)
         var pinned = itemView.findViewById<ImageView>(R.id.imgPin)
         var cardnote = itemView.findViewById<CardView>(R.id.cardNote)
+        var delete = itemView.findViewById<ImageView>(R.id.datadelete)
+        var update = itemView.findViewById<ImageView>(R.id.dataupdate)
 
     }
 
@@ -38,6 +46,7 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: Noteholder, position: Int) {
         db = NoteDatabase.getinstance(context)
 
@@ -47,6 +56,38 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
             txttitle.text = list.get(position).title
             txtnote.text = list.get(position).text
             cardnote.setCardBackgroundColor(list.get(position).color)
+
+
+            delete.setOnClickListener {
+                db.notes().deleteNote(list[position])
+                MainActivity.update()
+            }
+            itemView.setOnClickListener {
+                var dialog = Dialog(context)
+                dialog.setContentView(R.layout.activity_adddata)
+
+                val formater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a")
+                val current = LocalDateTime.now().format(formater)
+
+                var edttitle = dialog.findViewById<EditText>(R.id.edtTitles)
+                var edtNote = dialog.findViewById<EditText>(R.id.edtNotes)
+
+                edttitle.setText(list[position].title)
+                edtNote.setText(list[position].text)
+
+                dialog.show()
+
+                update.setOnClickListener {
+                    var data =
+                        Notes(edttitle.text.toString(), edtNote.text.toString(), current, 0, false)
+                    data.id = list[position].id
+
+                    db.notes().updatedata(data)
+                    dialog.dismiss()
+                    MainActivity.update()
+                }
+
+            }
 
             if (list.get(position).pin) {
                 pinned.setImageResource(R.drawable.unpinned)
@@ -87,6 +128,6 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
 
     override fun getItemCount(): Int {
         return list.size
-        notifyDataSetChanged()
+
     }
 }

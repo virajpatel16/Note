@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activitys.AddNoteActivity">
+    tools:context=".Activity.Adddata">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
             android:background="@null"
-            android:hint="Note Title"/>
+            android:hint="Note Title"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </androidx.cardview.widget.CardView>
 
