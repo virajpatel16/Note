@@ -15,8 +15,11 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.note.Activity.Database.NoteDatabase
 import com.example.note.Activity.MainActivity
+import com.example.note.Activity.MainActivity.Companion.binding
 import com.example.note.Activity.model.Notes
 import com.example.note.R
+import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -46,6 +49,8 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
     }
 
 
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: Noteholder, position: Int) {
         db = NoteDatabase.getinstance(context)
@@ -64,7 +69,7 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
             }
             itemView.setOnClickListener {
                 var dialog = Dialog(context)
-                dialog.setContentView(R.layout.activity_adddata)
+                dialog.setContentView(R.layout.update_item)
 
                 val formater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a")
                 val current = LocalDateTime.now().format(formater)
@@ -77,9 +82,10 @@ class NoteAdepter(notelist: List<Notes>) : Adapter<NoteAdepter.Noteholder>() {
 
                 dialog.show()
 
+
                 update.setOnClickListener {
                     var data =
-                        Notes(edttitle.text.toString(), edtNote.text.toString(), current, 0, false)
+                        Notes(edttitle.text.toString(), edtNote.text.toString(), current,list.get(position).color,false)
                     data.id = list[position].id
 
                     db.notes().updatedata(data)
